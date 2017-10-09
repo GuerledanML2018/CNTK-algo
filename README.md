@@ -1,2 +1,2 @@
-# MachineLearning
+# CNTK-algo
 Description

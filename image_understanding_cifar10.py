@@ -1,3 +1,4 @@
+#-*- coding:utf-8 -*-
 from __future__ import print_function # Use a function definition from future version (say 3.x from 2.7 interpreter)
 
 import matplotlib.pyplot as plt
@@ -29,13 +30,17 @@ if is_test():
     data_path = os.path.join(os.environ[envvar],'Image','CIFAR','v0','tutorial201')
     data_path = os.path.normpath(data_path)
 else:
-    data_path = os.path.join('data', 'CIFAR-10')
+    #data_path = os.path.join('data', 'CIFAR-10')
+    data_path = os.path.join('Guerledan')
 
 # model dimensions
-image_height = 32
-image_width  = 32
+image_height = 128
+image_width  = 72
 num_channels = 3
-num_classes  = 10
+num_classes  = 3
+
+mod = "save/trainv3_1.save"
+print("Le modèle sera sauvegardé dans", mod)
 
 import cntk.io.transforms as xforms
 #
@@ -66,30 +71,29 @@ def create_reader(map_file, mean_file, train):
     )))
 
     # Create the train and test readers
-reader_train = create_reader(os.path.join(data_path, 'train_map.txt'),
-                             os.path.join(data_path, 'CIFAR-10_mean.xml'), True)
-reader_test  = create_reader(os.path.join(data_path, 'test_map.txt'),
-                             os.path.join(data_path, 'CIFAR-10_mean.xml'), False)
-
-
-
-
-
+reader_train = create_reader(os.path.join(data_path, 'train.txt'),
+                             os.path.join(data_path, 'mean.xml'), True)
+reader_test  = create_reader(os.path.join(data_path, 'test.txt'),
+                             os.path.join(data_path, 'mean.xml'), False)
 
 
 def create_basic_model(input, out_dims):
     with C.layers.default_options(init=C.glorot_uniform(), activation=C.relu):
-        net = C.layers.Convolution((5,5), 32, pad=True)(input)
-        #net = C.layers.Convolution((5,5), 64, pad=True)(net)
-        net = C.layers.MaxPooling((3,3), strides=(2,2))(net)
+        net = C.layers.Convolution((5, 5), 64, pad=True)(input)
+        # net = C.layers.Convolution((5, 5), 32, pad=True)(net)
+        # net = C.layers.MaxPooling((3, 3), strides=(2, 2))(net)
 
-        net = C.layers.Convolution((5,5), 32, pad=True)(net)
-        #net = C.layers.Convolution((5,5), 64, pad=True)(net)
-        net = C.layers.MaxPooling((3,3), strides=(2,2))(net)
+        net = C.layers.Convolution((5, 5), 128, pad=True)(net)
+        # net = C.layers.Convolution((5, 5), 64, pad=True)(net)
+        net = C.layers.MaxPooling((3, 3), strides=(2, 2))(net)
 
-        net = C.layers.Convolution((5,5), 64, pad=True)(net)
-        #net = C.layers.Convolution((5,5), 64, pad=True)(net)
-        net = C.layers.MaxPooling((3,3), strides=(2,2))(net)
+        net = C.layers.Convolution((5, 5), 64, pad=True)(net)
+        # net = C.layers.Convolution((5, 5), 64, pad=True)(net)
+        net = C.layers.MaxPooling((3, 3), strides=(2, 2))(net)
+
+        net = C.layers.Convolution((5, 5), 32, pad=True)(net)
+        # net = C.layers.Convolution((5, 5), 64, pad=True)(net)
+        net = C.layers.MaxPooling((3, 3), strides=(2, 2))(net)
 
         net = C.layers.Dense(64)(net)
         net = C.layers.Dense(out_dims, activation=None)(net)
@@ -110,7 +114,7 @@ def train_and_evaluate(reader_train, reader_test, max_epochs, model_func):
     input_var_norm = C.element_times(feature_scale, input_var)
 
     # apply model to input
-    z = model_func(input_var_norm, out_dims=10)
+    z = model_func(input_var_norm, out_dims=3)
 
     #
     # Training action
@@ -166,6 +170,8 @@ def train_and_evaluate(reader_train, reader_test, max_epochs, model_func):
             batch_index += 1
         trainer.summarize_training_progress()
 
+    z.save(mod) # save the trained model
+
     #
     # Evaluation action
     #
@@ -184,7 +190,7 @@ def train_and_evaluate(reader_train, reader_test, max_epochs, model_func):
         # Fetch next test min batch.
         data = reader_test.next_minibatch(current_minibatch, input_map=input_map)
 
-        # minibatch data to be trained with
+        # minibatch data to be tested with
         metric_numer += trainer.test_minibatch(data) * current_minibatch
         metric_denom += current_minibatch
 
@@ -223,7 +229,7 @@ def train_and_evaluate(reader_train, reader_test, max_epochs, model_func):
     return C.softmax(z)
 
 def eval(pred_op, image_data):
-    label_lookup = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
+    label_lookup = ["Rochers", "Terrains vagues", "Forêts"]
     image_mean = 133.0
     image_data -= image_mean
     image_data = np.ascontiguousarray(np.transpose(image_data, (2, 0, 1)))
@@ -243,8 +249,9 @@ pred = train_and_evaluate(reader_train,
                           max_epochs=10,
                           model_func=create_basic_model)
 
-url = "https://cntk.ai/jup/201/00014.png"
-myimg = np.array(PIL.Image.open("cat.png"), dtype=np.float32)[:,:,1:]
+
+#url = "https://cntk.ai/jup/201/00014.png"
+#myimg = np.array(PIL.Image.open("cat.png"), dtype=np.float32)[:,:,1:]
 
 # Run the evaluation on the downloaded image
-eval(pred, myimg)
+#eval(pred, myimg)

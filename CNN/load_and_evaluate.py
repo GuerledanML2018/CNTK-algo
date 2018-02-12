@@ -22,7 +22,7 @@ def compute_confusion_matrix(pred):
     # Load the true labels
     true_labels = []
     images = []
-    for l in open("Guerledan/test.txt", "r") :
+    for l in open("../../data_guerledan_metz_sans_ambigue/test.txt", "r") :
         images.append(l.split('\t')[0])
         true_labels.append(int(l.split('\t')[1][:-1]))
 

@@ -1,6 +1,6 @@
 *.pyc
 _pycache_
 .idea
-*~
 *.model
+*~
 

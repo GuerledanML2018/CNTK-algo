@@ -14,20 +14,20 @@ import sklearn.metrics as metrics
 
 from PIL import Image
 
-DATASET_NAME = 'Guerledan_full_size'
-SAVEFILE_NAME = 'guerledan_save_4.model'
+DATASET_NAME = 'data_guerledan_metz_dangers'
+SAVEFILE_NAME = 'guerledan_save_8.model'
 
 # model dimensions
 image_height = 128
 image_width  = 72
 num_channels = 3
-num_classes  = 3
+num_classes  = 2
 
 def compute_confusion_matrix(pred):
     # Load the true labels
     true_labels = []
     images = []
-    for l in open("../" + DATASET_NAME + "/test.txt", "r") :
+    for l in open("../../" + DATASET_NAME + "/test.txt", "r") :
         images.append(l.split('\t')[0])
         true_labels.append(int(l.split('\t')[1][:-1]))
 

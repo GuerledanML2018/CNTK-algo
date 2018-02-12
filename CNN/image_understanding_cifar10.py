@@ -31,7 +31,7 @@ if is_test():
     data_path = os.path.normpath(data_path)
 else:
     #data_path = os.path.join('data', 'CIFAR-10')
-    data_path = os.path.join('Guerledan')
+    data_path = os.path.join('..','..','data_guerledan_metz_sans_ambigue')
 
 # model dimensions
 image_height = 128

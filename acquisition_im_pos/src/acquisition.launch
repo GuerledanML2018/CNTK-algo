@@ -1,0 +1,10 @@
+<launch>
+<node name="enregistre_image_pos" pkg="acquisition_im_pos"  type="enregistre_image_pos.py" output="screen">
+  </node>
+
+  <node name="nmea_serial_driver" pkg="nmea_navsat_driver" type="nmea_serial_driver">
+    <param name="_port" type="string" value="/dev/ttyUSB0" />
+    <param name="_baud" type="int"    value="4800" />
+  </node>
+
+</launch>

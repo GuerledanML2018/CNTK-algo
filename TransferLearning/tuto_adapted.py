@@ -15,9 +15,10 @@ except ImportError:
 import cntk as C
 
 
-DATASET_NAME = 'Guerledan_full_size'
-SAVEFILE_NAME = 'guerledan_save_4.model'
+DATASET_NAME = 'data_guerledan_metz_dangers'
+SAVEFILE_NAME = 'guerledan_save_8.model'
 RESNET_NAME = 'ResNet152' #ResNet18
+NB_EPOCH = 10
 
 isFast = False
 
@@ -42,6 +43,14 @@ data_root = os.path.join('.', 'Examples', 'Image')
 
 datasets_path = os.path.join(data_root, 'DataSets')
 output_path = os.path.join('.', 'temp', 'Output')
+
+
+if os.path.exists(os.path.join(output_path, SAVEFILE_NAME)):
+    print("Attention, le nom du fichier de sauvegarde existe déjà, il va être remplacé.")
+    answer = input("Continuer ? ")
+    if answer != "y" and answer != "yes" and answer != "o" and answer != "oui":
+        print("Exit")
+        exit(0)
 
 def ensure_exists(path):
     if not os.path.exists(path):
@@ -83,7 +92,7 @@ def download_model(model_root = os.path.join(data_root, 'PretrainedModels')):
         download_unless_exists(resnet_model_uri, resnet_model_local)
     return resnet_model_local
 
-dataset_root =  os.path.join('..', DATASET_NAME)
+dataset_root =  os.path.join('..', '..', DATASET_NAME)
 
 guerledan_data = {
         'data_folder': dataset_root,
@@ -261,7 +270,7 @@ def eval_test_images(loaded_model, output_file, test_map_file, image_dims, max_i
 
 force_retraining = True
 
-max_training_epochs = 5 if isFast else 20
+max_training_epochs = 5 if isFast else NB_EPOCH
 
 learning_params = {
     'max_epochs': max_training_epochs,
@@ -275,7 +284,7 @@ learning_params = {
 guerledan_model = {
     'model_file': os.path.join(output_path, SAVEFILE_NAME),
     'results_file': os.path.join(output_path, 'GuerledanPredictions.txt'),
-    'num_classes': 3
+    'num_classes': 2
 }
 
 # Train only if no model exists yet or if force_retraining is set to True

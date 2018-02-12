@@ -6,7 +6,7 @@ import xml.dom.minidom
 import cv2
 
 def findMetaData(foldername):
-	with open(foldername + '/train_map.txt', 'w') as mapFile:
+	with open(foldername + '/train.txt', 'w') as mapFile:
 		dataLine = readline().split("\t")
 		image = cv2.imread(dataLine[0], cv2.IMREAD_COLOR)
 		imgShape = image.shape()[1:]
@@ -34,7 +34,7 @@ def saveMean(fname, data):
 def computeMean(foldername):
     dataMean = np.zeros((3, imgSize, imgSize))
     nbImages = 0
-    with open(foldername + '/train_map.txt', 'w') as mapFile:
+    with open(foldername + '/train.txt', 'w') as mapFile:
     	for line in mapFile:
     		dataLine = line.split("\t")
     		image = cv2.imread(dataLine[0], cv2.IMREAD_COLOR)
@@ -45,7 +45,7 @@ def computeMean(foldername):
 
 
 
-if main == '__main__':
+if __name__ == '__main__':
 	imgShape, nbImages = findMetaData(sys.argv[1:])
 	computeMean(sys.argv[1:])
-	
+

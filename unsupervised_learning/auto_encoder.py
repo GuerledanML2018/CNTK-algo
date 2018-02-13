@@ -119,41 +119,41 @@ def train_and_test(reader_train, reader_test, model_func):
     # Note: we use a test file reader to read data different from a training data
     #############################################################################
 
-#    # Test data for trained model
-#    test_minibatch_size = 32
-#    num_samples = 10000
-#    num_minibatches_to_test = num_samples / test_minibatch_size
+    # Test data for trained model
+    test_minibatch_size = 3
+    num_samples = 960
+    num_minibatches_to_test = num_samples / test_minibatch_size
 #    test_result = 0.0
-#
-#    # Test error metric calculation
+
+    # Test error metric calculation
     metric_numer    = 0
     metric_denom    = 0
-#
-#    test_input_map = {
-#        input  : reader_test.streams.features,
-#        label  : reader_test.streams.features
-#    }
-#
-#    for i in range(0, int(num_minibatches_to_test)):
-#
-#        # We are loading test data in batches specified by test_minibatch_size
-#        # Each data point in the minibatch is a MNIST digit image of 784 dimensions
-#        # with one pixel per dimension that we will encode / decode with the
-#        # trained model.
-#        data = reader_test.next_minibatch(test_minibatch_size,
-#                                       input_map = test_input_map)
-#
-#        # Specify the mapping of input variables in the model to actual
-#        # minibatch data to be tested with
-#        eval_error = trainer.test_minibatch(data)
-#
-#        # minibatch data to be trained with
-#        metric_numer += np.abs(eval_error * test_minibatch_size)
-#        metric_denom += test_minibatch_size
-#
-#    # Average of evaluation errors of all test minibatches
+
+    test_input_map = {
+        input  : reader_test.streams.features,
+        label  : reader_test.streams.features
+    }
+
+    for i in range(0, int(num_minibatches_to_test)):
+
+        # We are loading test data in batches specified by test_minibatch_size
+        # Each data point in the minibatch is a MNIST digit image of 784 dimensions
+        # with one pixel per dimension that we will encode / decode with the
+        # trained model.
+        data = reader_test.next_minibatch(test_minibatch_size,
+                                       input_map = test_input_map)
+
+        # Specify the mapping of input variables in the model to actual
+        # minibatch data to be tested with
+        eval_error = trainer.test_minibatch(data)
+
+        # minibatch data to be trained with
+        metric_numer += np.abs(eval_error * test_minibatch_size)
+        metric_denom += test_minibatch_size
+
+    # Average of evaluation errors of all test minibatches
     test_error = (metric_numer*100.0) / (metric_denom)
-#    print("Average test error: {0:0.2f}%".format(test_error))
+    print("Average test error: {0:0.2f}%".format(test_error))
 
     return model, train_error, test_error
 
@@ -185,16 +185,16 @@ if __name__ == '__main__':
 
     # Récupération des datasets
     try:
-        data_dir = os.path.join("DataSets", "MNIST")
+        data_dir = os.path.join("unsupervised_learning", "encode", "imagettes_176x96")
         train_file = os.path.join(data_dir, "Train-28x28_cntk_text.txt")
         test_file = os.path.join(data_dir, "Test-28x28_cntk_text.txt")
     except:
         raise ValueError("Please generate the data before executing this script")
     
     # données d'initialisation
-    input_dim = 784  # nombre de pixels dans une image
-    encoding_dims = [128,64,32]  # TODO : choisir la dimensionnalité
-    decoding_dims = [64,128]  # TODO : same
+    input_dim = 176*96  # nombre de pixels dans une image
+    encoding_dims = [4096, 1024, 256, 128, 64, 32]  # ??? : pas forcément le mieux
+    decoding_dims = [64, 128, 256, 1024, 4096]  # ??? : idem
     encoded_model = None  # le modèle qui encode les images
     
     num_label_classes = 10  # ??? : utilisé ou non ? 
@@ -231,9 +231,9 @@ if __name__ == '__main__':
     print_image_stats(decoded_image, "Decoded image statistics:")
     
     # Plot the original and the decoded image
-    img1 = orig_image.reshape(28,28)
+    img1 = orig_image.reshape(96,176)
     text1 = 'Original image'    
-    img2 = decoded_image.reshape(28,28)
+    img2 = decoded_image.reshape(96,176)
     text2 = 'Decoded image'    
     plot_image_pair(img1, text1, img2, text2)
     

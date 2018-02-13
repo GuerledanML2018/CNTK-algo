@@ -14,8 +14,8 @@ import sklearn.metrics as metrics
 
 from PIL import Image
 
-DATASET_NAME = 'data_guerledan_metz_dangers'
-SAVEFILE_NAME = 'guerledan_save_8.model'
+DATASET_NAME = 'data_guerledan_metz_dangers_sans_ambiguite'
+SAVEFILE_NAME = 'guerledan_save_9.model'
 
 # model dimensions
 image_height = 128
@@ -32,10 +32,22 @@ def compute_confusion_matrix(pred):
         true_labels.append(int(l.split('\t')[1][:-1]))
 
     # evaluate all the images
+    # nb_err = 0
+    # vp = []
     ev_labels = []
-    for im_name in images:
+    for indice_im, im_name in enumerate(images):
         result = eval_single_image(pred, im_name, (3, 224, 224))
-        ev_labels.append(np.argmax(result))
+        label = np.argmax(result)
+        ev_labels.append(label)
+        # if label != true_labels[indice_im]:
+            # if label == 0:
+            #     vp.append(im_name)
+            # nb_err += 1
+            # print(im_name, label, result, true_labels[indice_im])
+    # print("Nombre d'erreurs : ", nb_err)
+    # with open("vp.txt", 'w') as f:
+    #     for v in vp:
+    #         f.write(v)
 
     # compute confusion matrix
     conf_mat = metrics.confusion_matrix(true_labels, ev_labels)

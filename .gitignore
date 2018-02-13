@@ -3,6 +3,9 @@ _pycache_
 .idea
 *.model
 *~
+
+TransferLearning/*.txt
+
 /images
 .spyproject
 encode

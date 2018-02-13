@@ -3,4 +3,5 @@ _pycache_
 .idea
 *.model
 *~
-
+/images
+.spyproject

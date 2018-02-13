@@ -183,48 +183,46 @@ if __name__ == '__main__':
     
     isFast = True
 
+    # Récupération des datasets
     try:
         data_dir = os.path.join("DataSets", "MNIST")
         train_file = os.path.join(data_dir, "Train-28x28_cntk_text.txt")
         test_file = os.path.join(data_dir, "Test-28x28_cntk_text.txt")
     except:
-        raise ValueError("Please generate the data by completing CNTK 103 Part A")
+        raise ValueError("Please generate the data before executing this script")
     
-    
-    input_dim = 784
+    # données d'initialisation
+    input_dim = 784  # nombre de pixels dans une image
     encoding_dims = [128,64,32]  # TODO : choisir la dimensionnalité
     decoding_dims = [64,128]  # TODO : same
-    encoded_model = None
+    encoded_model = None  # le modèle qui encode les images
     
-    num_label_classes = 3 #TODO
+    num_label_classes = 10  # ??? : utilisé ou non ? 
     
+    # readers
     reader_train = create_reader(train_file, True, input_dim, num_label_classes)
     reader_test = create_reader(test_file, False, input_dim, num_label_classes)
     
+    # training
     model, deep_ae_train_error, deep_ae_test_error = train_and_test(reader_train,
                                                                     reader_test,
                                                                     model_func = create_deep_model)
         
-    
+    # evaluation
     reader_eval = create_reader(test_file, False, input_dim, num_label_classes)
-
     eval_minibatch_size = 50
     eval_input_map = { input  : reader_eval.streams.features }    
-        
     eval_data = reader_eval.next_minibatch(eval_minibatch_size,
                                       input_map = eval_input_map)
-    
     img_data = eval_data[input].asarray()
     
     # Select a random image
     np.random.seed(0) 
     idx = np.random.choice(eval_minibatch_size)
     
-    
     # Run the same image as the simple autoencoder through the deep encoder
     orig_image = img_data[idx,:,:]
     decoded_image = model.eval(orig_image)[0]*255
-    
     
     # Print original image
     print_image_stats(orig_image, "Original image statistics:")
@@ -234,12 +232,14 @@ if __name__ == '__main__':
     
     # Plot the original and the decoded image
     img1 = orig_image.reshape(28,28)
-    text1 = 'Original image'
-    
+    text1 = 'Original image'    
     img2 = decoded_image.reshape(28,28)
-    text2 = 'Decoded image'
+    text2 = 'Decoded image'    
+    plot_image_pair(img1, text1, img2, text2)
     
-    plot_image_pair(img1, text1, img2, text2)    
+    # Exemple d'encodage d'une image
+    img = orig_image
+    img_encoded =  encoded_model.eval([img])
     
     
     

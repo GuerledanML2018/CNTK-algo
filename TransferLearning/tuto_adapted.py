@@ -15,10 +15,10 @@ except ImportError:
 import cntk as C
 
 
-DATASET_NAME = 'data_guerledan_metz_dangers'
-SAVEFILE_NAME = 'guerledan_save_8.model'
+DATASET_NAME = 'data_guerledan_metz_dangers_sans_ambiguite'
+SAVEFILE_NAME = 'guerledan_save_9.model'
 RESNET_NAME = 'ResNet152' #ResNet18
-NB_EPOCH = 10
+NB_EPOCH = 20
 
 isFast = False
 

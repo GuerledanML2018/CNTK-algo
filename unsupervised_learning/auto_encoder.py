@@ -79,7 +79,7 @@ def train_and_test(reader_train, reader_test, model_func):
 
     # Instantiate the trainer object to drive the model training
     lr_per_sample = [0.00003]
-    lr_schedule = C.learning_parameter_schedule_per_sample(lr_per_sample, epoch_size)
+    lr_schedule = C.learners.learning_parameter_schedule_per_sample(lr_per_sample, int(epoch_size))
 
     # Momentum which is applied on every minibatch_size = 64 samples
     momentum_schedule = C.momentum_schedule(0.9126265014311797, minibatch_size)
@@ -177,6 +177,7 @@ def plot_image_pair(img1, text1, img2, text2):
     axes[1].imshow(img2, cmap="gray")
     axes[1].set_title(text2)
     axes[1].axis("off")
+    plt.show()
                  
     
 if __name__ == '__main__':
@@ -184,17 +185,14 @@ if __name__ == '__main__':
     isFast = True
 
     # Récupération des datasets
-    try:
-        data_dir = os.path.join("unsupervised_learning", "encode", "imagettes_176x96")
-        train_file = os.path.join(data_dir, "Train-28x28_cntk_text.txt")
-        test_file = os.path.join(data_dir, "Test-28x28_cntk_text.txt")
-    except:
-        raise ValueError("Please generate the data before executing this script")
+    data_dir = os.path.join("encode", "imagettes_176x96")
+    train_file = os.path.join(data_dir, "train")
+    test_file = os.path.join(data_dir, "test")
     
     # données d'initialisation
     input_dim = 176*96  # nombre de pixels dans une image
-    encoding_dims = [4096, 1024, 256, 128, 64, 32]  # ??? : pas forcément le mieux
-    decoding_dims = [64, 128, 256, 1024, 4096]  # ??? : idem
+    encoding_dims = [4096, 2048, 1024]  # ??? : pas forcément le mieux
+    decoding_dims = [2048, 4096]  # ??? : idem
     encoded_model = None  # le modèle qui encode les images
     
     num_label_classes = 10  # ??? : utilisé ou non ? 

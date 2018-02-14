@@ -32,7 +32,8 @@ def savetxt(filename, ndarray):
                 row_str = row.astype(str)
                 #label_str = labels[row[-1]]
                 label_str = '1 0 0 0 0 0 0 0 0 0'
-                feature_str = ' '.join(row_str[:-1])
+             #   feature_str = ' '.join(row_str[:-1])
+                feature_str = ' '.join(row_str)
                 f.write('|labels {} |features {}\n'.format(label_str, feature_str))
     else:
         print("File already exists", filename)
@@ -83,8 +84,8 @@ def loadLabels(gzfname, cimg):
 if __name__ == '__main__':
     
     data_dir = os.path.join("encode", "imagettes_176x96")
-    gzfname = "test"
-    num_samples = 960
+    gzfname = "train"
+    num_samples = 5760
     
     data = loadData(os.path.join(data_dir, gzfname + '.gz'), num_samples)
     

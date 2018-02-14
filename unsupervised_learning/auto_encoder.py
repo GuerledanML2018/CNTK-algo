@@ -70,10 +70,10 @@ def train_and_test(reader_train, reader_test, model_func):
     label_error  = C.classification_error(model, target)
 
     # training config
-    epoch_size = 5760/2        # is half the dataset size
+    epoch_size = nb_samples_train/2        # is half the dataset size
     minibatch_size = 20
     num_sweeps_to_train_with = 5 if isFast else 100
-    num_samples_per_sweep = 5760
+    num_samples_per_sweep = nb_samples_train
     num_minibatches_to_train = (num_samples_per_sweep * num_sweeps_to_train_with) // minibatch_size
 
 
@@ -121,7 +121,7 @@ def train_and_test(reader_train, reader_test, model_func):
 
     # Test data for trained model
     test_minibatch_size = 3
-    num_samples = 960
+    num_samples = nb_samples_test
     num_minibatches_to_test = num_samples / test_minibatch_size
 #    test_result = 0.0
 
@@ -199,6 +199,8 @@ if __name__ == '__main__':
     
     num_label_classes = 10  # ??? : utilisé ou non ? 
     
+    nb_samples_train = 5760
+    nb_samples_test = 960
     # readers
     reader_train = create_reader(train_file, True, input_dim, num_label_classes)
     reader_test = create_reader(test_file, False, input_dim, num_label_classes)

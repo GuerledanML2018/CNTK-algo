@@ -14,8 +14,8 @@ import sklearn.metrics as metrics
 
 from PIL import Image
 
-DATASET_NAME = 'data_guerledan_metz_dangers_sans_ambiguite'
-SAVEFILE_NAME = 'guerledan_save_9.model'
+DATASET_NAME = 'data_guerledan_metz_dangers'
+SAVEFILE_NAME = 'guerledan_save_5.model'
 
 # model dimensions
 image_height = 128
@@ -23,7 +23,7 @@ image_width  = 72
 num_channels = 3
 num_classes  = 2
 
-def compute_confusion_matrix(pred):
+def compute_confusion_matrix(pred, tolerance = 0.9):
     # Load the true labels
     true_labels = []
     images = []
@@ -37,8 +37,9 @@ def compute_confusion_matrix(pred):
     ev_labels = []
     for indice_im, im_name in enumerate(images):
         result = eval_single_image(pred, im_name, (3, 224, 224))
-        label = np.argmax(result)
+        label = 0 if result[0] >= tolerance else 1
         ev_labels.append(label)
+        print("Image", indice_im, "sur", len(images), "-->", round(indice_im/len(images)*100, 2), "%")
         # if label != true_labels[indice_im]:
             # if label == 0:
             #     vp.append(im_name)
@@ -48,6 +49,7 @@ def compute_confusion_matrix(pred):
     # with open("vp.txt", 'w') as f:
     #     for v in vp:
     #         f.write(v)
+    print("Terminé\n")
 
     # compute confusion matrix
     conf_mat = metrics.confusion_matrix(true_labels, ev_labels)
@@ -79,15 +81,16 @@ def eval_single_image(loaded_model, image_path, image_dims):
         return ['None']
 
 
+if __name__ == "__main__":
 
-mod = "temp/Output/" + SAVEFILE_NAME
-z = C.load_model(mod)
-print("Modèle chargé :", mod)
-# pred = C.softmax(z)
+    mod = "temp/Output/" + SAVEFILE_NAME
+    z = C.load_model(mod)
+    print("Modèle chargé :", mod)
+    # pred = C.softmax(z)
 
 
-# eval(pred, myimg)
-conf_mat = compute_confusion_matrix(z)
-print(conf_mat)
-print("Pourcentage de réussite :", 100*sum(np.diag(conf_mat))/np.sum(
-    conf_mat), "%")
+    # eval(pred, myimg)
+    conf_mat = compute_confusion_matrix(z)
+    print(conf_mat)
+    print("Pourcentage de réussite :", 100*sum(np.diag(conf_mat))/np.sum(
+        conf_mat), "%")

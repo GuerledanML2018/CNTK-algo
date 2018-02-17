@@ -9,22 +9,6 @@ import os
 import numpy as np
 from PIL import Image
 
-# nb_lignes = 2
-# nb_colonnes = 4
-# overlapping = 0.0 # en %
-#
-# im_dir = os.path.join("..", "..",
-#                       "data_guerledan_metz_dangers_sans_ambiguite", "train",
-#                       "test_decoupe")
-# fileNames = [f for f in os.listdir(os.path.join(im_dir)) if ".jpg" in f or ".jpeg" in f]
-#     # np.random.shuffle(fileNames)  # TODO :
-#     # fileNames = fileNames[:50]  #TODO :
-#
-#     nb_images = len(fileNames)
-#     im_traitees = 0
-
-# for i, f in enumerate(fileNames):
-
 
 def decoupe(nb_lignes, nb_colonnes, overlapping, im_path, output_dir):
     im_names = []
@@ -90,5 +74,14 @@ def decoupe(nb_lignes, nb_colonnes, overlapping, im_path, output_dir):
 
     # print("Terminé")
 
-
     return im_names
+
+if __name__ == "__main__":
+    nb_lignes = 1
+    nb_colonnes = 8
+    overlapping = 0.75  # en % / 100
+
+    im_dir = os.path.join("..", "..", "images_test", "0011.jpg")
+    output_dir = os.path.join("..", "..", "images_test")
+
+    decoupe(nb_lignes, nb_colonnes, overlapping, im_dir, output_dir)

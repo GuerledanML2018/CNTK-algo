@@ -15,8 +15,8 @@ except ImportError:
 import cntk as C
 
 
-DATASET_NAME = 'data_guerledan_metz_dangers_sans_ambiguite'
-SAVEFILE_NAME = 'guerledan_save_9.model'
+DATASET_NAME = 'data_guerledan_metz_dangers_sans_ambiguite_decoupees_pour_validation'
+SAVEFILE_NAME = 'guerledan_save_11.model'
 RESNET_NAME = 'ResNet152' #ResNet18
 NB_EPOCH = 20
 
